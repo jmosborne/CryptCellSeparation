@@ -1,0 +1,13 @@
+# Lines that start with '#' are comments.
+
+# Built files
+*.[oa]
+*.os
+*.class
+*.so
+*.pyc
+build/*
+test/output/*
+
+# Rndom OSX files
+*.DS_Store
