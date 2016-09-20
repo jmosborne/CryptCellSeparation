@@ -33,75 +33,61 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "CellParentIdWriter.hpp"
+#include "SeparatedCellLabelWriter.hpp"
 #include "AbstractCellPopulation.hpp"
-#include "CellParentId.hpp"
+#include "SeparatedCellLabel.hpp"
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-CellParentIdWriter<ELEMENT_DIM, SPACE_DIM>::CellParentIdWriter()
-    : AbstractCellWriter<ELEMENT_DIM, SPACE_DIM>("parentcell.dat")
+SeparatedCellLabelWriter<ELEMENT_DIM, SPACE_DIM>::SeparatedCellLabelWriter()
+    : AbstractCellWriter<ELEMENT_DIM, SPACE_DIM>("results.vizseparatedlabels")
 {
-    this->mVtkCellDataName = "Cell Parent IDs";
+    this->mVtkCellDataName = "Separated Cell labels";
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double CellParentIdWriter<ELEMENT_DIM, SPACE_DIM>::GetCellParentId(CellPtr pCell)
+double SeparatedCellLabelWriter<ELEMENT_DIM, SPACE_DIM>::GetCellDataForVtkOutput(CellPtr pCell, AbstractCellPopulation<ELEMENT_DIM, SPACE_DIM>* pCellPopulation)
 {
-    CellPropertyCollection cell_parent_id_collection = pCell->rGetCellPropertyCollection().GetPropertiesType<CellParentId>();
-    assert(cell_parent_id_collection.GetSize() == 1);
-    boost::shared_ptr<CellParentId> p_cell_parent_id = boost::static_pointer_cast<CellParentId>(cell_parent_id_collection.GetProperty());
-    return p_cell_parent_id->GetParentId();
-}
-
-
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-c_vector<double, 3> CellParentIdWriter<ELEMENT_DIM, SPACE_DIM>::GetCellDivisionLocation(CellPtr pCell)
-{
-    c_vector<double, 3> location;
-    
-    location[0] = pCell->GetCellData()->GetItem("division_location_x");
-    location[1] = pCell->GetCellData()->GetItem("division_location_y");
-    location[2] = pCell->GetCellData()->GetItem("division_location_z");
-
-    return location;
+    double label = 0.0;
+    if (pCell->HasCellProperty<SeparatedCellLabel>())
+    {
+        CellPropertyCollection collection = pCell->rGetCellPropertyCollection().GetProperties<SeparatedCellLabel>();
+        boost::shared_ptr<SeparatedCellLabel> p_label = boost::static_pointer_cast<SeparatedCellLabel>(collection.GetProperty());
+        label = p_label->GetColour();
+    }
+    return label;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-double CellParentIdWriter<ELEMENT_DIM, SPACE_DIM>::GetCellDataForVtkOutput(CellPtr pCell, AbstractCellPopulation<ELEMENT_DIM, SPACE_DIM>* pCellPopulation)
+void SeparatedCellLabelWriter<ELEMENT_DIM, SPACE_DIM>::VisitCell(CellPtr pCell, AbstractCellPopulation<ELEMENT_DIM, SPACE_DIM>* pCellPopulation)
 {
-    double cell_id = GetCellParentId(pCell);
-    return cell_id;
-}
+    unsigned label = 0;
+    if (pCell->HasCellProperty<SeparatedCellLabel>())
+    {
+        CellPropertyCollection collection = pCell->rGetCellPropertyCollection().GetProperties<SeparatedCellLabel>();
+        boost::shared_ptr<SeparatedCellLabel> p_label = boost::static_pointer_cast<SeparatedCellLabel>(collection.GetProperty());
+        label = p_label->GetColour();
+    }
 
-template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
-void CellParentIdWriter<ELEMENT_DIM, SPACE_DIM>::VisitCell(CellPtr pCell, AbstractCellPopulation<ELEMENT_DIM, SPACE_DIM>* pCellPopulation)
-{
-    unsigned cell_id = pCell->GetCellId();
-    unsigned parent_cell_id = GetCellParentId(pCell);
-    
+    *this->mpOutStream << " " << label;
+
     unsigned location_index = pCellPopulation->GetLocationIndexUsingCell(pCell);
-    *this->mpOutStream << " " << cell_id << " " << parent_cell_id << " " << location_index;
+    *this->mpOutStream << " " << location_index;
 
-    // Output coordinates of division
-    c_vector<double, 3> coords = GetCellDivisionLocation(pCell);
+    c_vector<double, SPACE_DIM> coords = pCellPopulation->GetLocationOfCellCentre(pCell);
     for (unsigned i=0; i<SPACE_DIM; i++)
     {
         *this->mpOutStream << " " << coords[i];
     }
-
-    *this->mpOutStream << " " << pCell->GetCellData()->GetItem("division_time");
-
-
 }
 
 // Explicit instantiation
-template class CellParentIdWriter<1,1>;
-template class CellParentIdWriter<1,2>;
-template class CellParentIdWriter<2,2>;
-template class CellParentIdWriter<1,3>;
-template class CellParentIdWriter<2,3>;
-template class CellParentIdWriter<3,3>;
+template class SeparatedCellLabelWriter<1,1>;
+template class SeparatedCellLabelWriter<1,2>;
+template class SeparatedCellLabelWriter<2,2>;
+template class SeparatedCellLabelWriter<1,3>;
+template class SeparatedCellLabelWriter<2,3>;
+template class SeparatedCellLabelWriter<3,3>;
 
 #include "SerializationExportWrapperForCpp.hpp"
 // Declare identifier for the serializer
-EXPORT_TEMPLATE_CLASS_ALL_DIMS(CellParentIdWriter)
+EXPORT_TEMPLATE_CLASS_ALL_DIMS(SeparatedCellLabelWriter)

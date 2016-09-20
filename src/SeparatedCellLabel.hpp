@@ -33,38 +33,34 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef CELLPARENTID_HPP_
-#define CELLPARENTID_HPP_
+#ifndef SeparatedCELLLABEL_HPP_
+#define SeparatedCELLLABEL_HPP_
 
 #include <boost/shared_ptr.hpp>
-#include "UblasVectorInclude.hpp"
 #include "AbstractCellProperty.hpp"
 #include "ChasteSerialization.hpp"
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/vector.hpp>
-#include "Exception.hpp"
+
 /**
- * Cell parent ID trcker class.
+ * Cell label class.
  *
  * Each Cell owns a CellPropertyCollection, which may include a shared pointer
- * to an object of this type. When a Cell that has a Parent ID divides, the daughter
- * cells both have the same Parent ID.
+ * to an object of this type. When a Cell that is labelled divides, the daughter
+ * cells are both labelled.
  *
- * The CellParentId object keeps track of the Parent ID of each cell.
+ * The SeparatedCellLabel object keeps track of the number of cells that have the label, as well
+ * as what colour should be used by the visualizer to display cells with the label.
  */
-class CellParentId : public AbstractCellProperty
+class SeparatedCellLabel : public AbstractCellProperty
 {
+protected:
+
+    /**
+     * Colour for use by visualizer.
+     */
+    unsigned mColour;
+
 private:
-
-    /**
-     * Cell parent ID
-     */
-    unsigned mParentId;
-
-    /**
-     * Store the location that the prent cell divided
-     */
-    // c_vector<double,3> mDivisionLocation;
 
     /** Needed for serialization. */
     friend class boost::serialization::access;
@@ -78,8 +74,7 @@ private:
     void serialize(Archive & archive, const unsigned int version)
     {
         archive & boost::serialization::base_object<AbstractCellProperty>(*this);
-        archive & mParentId;
-        // archive & mDivisionLocation;
+        archive & mColour;
     }
 
 public:
@@ -87,38 +82,23 @@ public:
     /**
      * Constructor.
      *
-     * @param parentId the ID of the parent of this cell.
+     * @param colour  what colour cells with this label should be in the visualizer (defaults to 6)
      */
-    CellParentId(unsigned parentId = UNSIGNED_UNSET);
+    SeparatedCellLabel(unsigned colour=10);
 
     /**
      * Destructor.
      */
-    virtual ~CellParentId();
+    virtual ~SeparatedCellLabel();
 
     /**
-     * @return #mParentId.
+     * @return #mColour.
      */
-    unsigned GetParentId() const;
-
-    /**
-     * @param mParentId.
-     */
-    void SetParentId(double parentId);
-
-    /**
-     * @return #mDivisionLocation.
-     */
-    // c_vector<double, 3> GetDivisionLocation();
-
-    /**
-     * @param mDivisionLocation.
-     */
-    // void SetDivisionLocation(c_vector<double, 3> divisionLocation);
+    unsigned GetColour() const;
 };
 
 #include "SerializationExportWrapper.hpp"
 // Declare identifier for the serializer
-CHASTE_CLASS_EXPORT(CellParentId)
+CHASTE_CLASS_EXPORT(SeparatedCellLabel)
 
-#endif /* CELLPARENTID_HPP_ */
+#endif /* SeparatedCELLLABEL_HPP_ */

@@ -48,7 +48,8 @@ NewSimpleWntCellCycleModel::NewSimpleWntCellCycleModel()
     : mUseCellProliferativeTypeDependentG1Duration(false),
       mWntStemThreshold(0.8),
       mWntTransitThreshold(0.65),
-      mWntLabelledThreshold(0.65)
+      mWntLabelledThreshold(0.65),
+      mLabelledProbability(0.5)
 {
 }
 
@@ -59,7 +60,8 @@ NewSimpleWntCellCycleModel::NewSimpleWntCellCycleModel(const NewSimpleWntCellCyc
      mUseCellProliferativeTypeDependentG1Duration(rModel.mUseCellProliferativeTypeDependentG1Duration),
      mWntStemThreshold(rModel.mWntStemThreshold),
      mWntTransitThreshold(rModel.mWntTransitThreshold),
-     mWntLabelledThreshold(rModel.mWntLabelledThreshold)
+     mWntLabelledThreshold(rModel.mWntLabelledThreshold),
+     mLabelledProbability(rModel.mLabelledProbability)
 {
     /*
      * Initialize only those member variables defined in this class.
@@ -85,14 +87,6 @@ AbstractCellCycleModel* NewSimpleWntCellCycleModel::CreateCellCycleModel()
 
 void NewSimpleWntCellCycleModel::Initialise()
 {
-    // Initialise the dision location on initial cells
-
-    mpCell->GetCellData()->SetItem("division_location_x",0);
-    mpCell->GetCellData()->SetItem("division_location_y",0);
-    mpCell->GetCellData()->SetItem("division_location_z",0);
-    mpCell->GetCellData()->SetItem("parent_id",0);
-    mpCell->GetCellData()->SetItem("division_time",0);
-
     AbstractSimplePhaseBasedCellCycleModel::Initialise();
 }
 
@@ -297,14 +291,47 @@ void NewSimpleWntCellCycleModel::InitialiseDaughterCell()
     AbstractSimplePhaseBasedCellCycleModel::InitialiseDaughterCell();
 }
 
+
+// THIS METHOID HAS CHANGED!!!
 void NewSimpleWntCellCycleModel::ResetForDivision()
 {
     // Reset the cell parent ID
     CellPropertyCollection cell_parent_id_collection = mpCell->rGetCellPropertyCollection().GetPropertiesType<CellParentId>();
     assert(cell_parent_id_collection.GetSize() == 1);
     boost::shared_ptr<CellParentId> p_cell_parent_id = boost::static_pointer_cast<CellParentId>(cell_parent_id_collection.GetProperty());
-
     p_cell_parent_id->SetParentId(mpCell->GetCellId());
+
+    switch (mDimension)
+    {
+        case 3:
+        {
+            double cell_location_x = mpCell->GetCellData()->GetItem("cell_location_x");
+            double cell_location_y = mpCell->GetCellData()->GetItem("cell_location_y");
+            double cell_location_z = mpCell->GetCellData()->GetItem("cell_location_z");
+
+            mpCell->GetCellData()->SetItem("division_location_x",cell_location_x);
+            mpCell->GetCellData()->SetItem("division_location_y",cell_location_y);
+            mpCell->GetCellData()->SetItem("division_location_z",cell_location_z);
+            break;
+        }        
+        default:
+        NEVER_REACHED;
+    }
+
+    mpCell->GetCellData()->SetItem("division_time",SimulationTime::Instance()->GetTime());
+   
+    // Now reset whether cell is labeled or not.
+
+    // Removes the cell label
+    mpCell->RemoveCellProperty<CellLabel>();
+
+
+    if (RandomNumberGenerator::Instance()->ranf() < mLabelledProbability)
+    {
+        boost::shared_ptr<AbstractCellProperty> p_label =
+        mpCell->rGetCellPropertyCollection().GetCellPropertyRegistry()->Get<CellLabel>();
+        mpCell->AddCellProperty(p_label);
+    }
 
     AbstractSimplePhaseBasedCellCycleModel::ResetForDivision();
 }
@@ -333,8 +360,6 @@ double NewSimpleWntCellCycleModel::GetWntTransitThreshold() const
 
 void NewSimpleWntCellCycleModel::SetWntTransitThreshold(double wntTransitThreshold)
 {
-    //assert(wntTransitThreshold <= 1.0);
-    //assert(wntTransitThreshold >= 0.0);
     mWntTransitThreshold = wntTransitThreshold;
 }
 
@@ -345,9 +370,19 @@ double NewSimpleWntCellCycleModel::GetWntLabelledThreshold() const
 
 void NewSimpleWntCellCycleModel::SetWntLabelledThreshold(double wntLabelledThreshold)
 {
-//    assert(wntLabelledThreshold <= 1.0);
-//    assert(wntLabelledThreshold >= 0.0);
     mWntLabelledThreshold = wntLabelledThreshold;
+}
+
+double NewSimpleWntCellCycleModel::GetLabelledProbability() const
+{
+    return mLabelledProbability;
+}
+
+void NewSimpleWntCellCycleModel::SetLabelledProbability(double labelledProbability)
+{
+    assert(labelledProbability <= 1.0);
+    assert(labelledProbability >= 0.0);
+    mLabelledProbability = labelledProbability;
 }
 
 void NewSimpleWntCellCycleModel::OutputCellCycleModelParameters(out_stream& rParamsFile)
@@ -356,6 +391,7 @@ void NewSimpleWntCellCycleModel::OutputCellCycleModelParameters(out_stream& rPar
     *rParamsFile << "\t\t\t<WntStemThreshold>" << mWntStemThreshold << "</WntStemThreshold>\n";
     *rParamsFile << "\t\t\t<WntTransitThreshold>" << mWntTransitThreshold << "</WntTransitThreshold>\n";
     *rParamsFile << "\t\t\t<WntLabelledThreshold>" << mWntLabelledThreshold << "</WntLabelledThreshold>\n";
+    *rParamsFile << "\t\t\t<LabelledProbability>" << mLabelledProbability << "</LabelledProbability>\n";
 
     // Call method on direct parent class
     AbstractSimplePhaseBasedCellCycleModel::OutputCellCycleModelParameters(rParamsFile);

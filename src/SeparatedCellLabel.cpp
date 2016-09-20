@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2005-2015, University of Oxford.
+Copyright (c) 2005-2016, University of Oxford.
 All rights reserved.
 
 University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,27 +33,23 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "OffLatticeSimulationWithMonoclonalStoppingEvent.hpp"
+#include "SeparatedCellLabel.hpp"
 
-bool OffLatticeSimulationWithMonoclonalStoppingEvent::StoppingEventHasOccurred()
-{
-
-
-	unsigned num_healthy = this->mrCellPopulation.GetCellMutationStateCount()[0];
-	unsigned num_mutant = this->mrCellPopulation.GetCellMutationStateCount()[2];
-
-   return  ( (num_healthy ==0 || num_mutant == 0) && (SimulationTime::Instance()->GetTime() > 110) );
-}
-
-OffLatticeSimulationWithMonoclonalStoppingEvent::OffLatticeSimulationWithMonoclonalStoppingEvent(
-        AbstractCellPopulation<3>& rCellPopulation)
-    : OffLatticeSimulation<3>(rCellPopulation)
+SeparatedCellLabel::SeparatedCellLabel(unsigned colour)
+    : AbstractCellProperty(),
+      mColour(colour)
 {
 }
 
+SeparatedCellLabel::~SeparatedCellLabel()
+{
+}
 
+unsigned SeparatedCellLabel::GetColour() const
+{
+    return mColour;
+}
 
-
-// Serialization for Boost >= 1.36
 #include "SerializationExportWrapperForCpp.hpp"
-CHASTE_CLASS_EXPORT(OffLatticeSimulationWithMonoclonalStoppingEvent)
+// Declare identifier for the serializer
+CHASTE_CLASS_EXPORT(SeparatedCellLabel)

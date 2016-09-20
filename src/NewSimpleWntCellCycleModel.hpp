@@ -67,6 +67,7 @@ private:
         archive & mWntStemThreshold;
         archive & mWntTransitThreshold;
         archive & mWntLabelledThreshold;
+        archive & mLabelledProbability;
     }
 
 protected:
@@ -91,6 +92,12 @@ protected:
      * Non-dimensionalized Wnt threshold, above which labelled cells progress through the cell cycle.
      */
     double mWntLabelledThreshold;
+
+    /**
+     * Probbility that each daughter cell is labeled
+     */
+    double mLabelledProbability;
+
 
     /**
      * @return the Wnt level experienced by the cell.
@@ -219,6 +226,19 @@ public:
      * @param wntLabelledThreshold the value of mWntLabelledThreshold
      */
     void SetWntLabelledThreshold(double wntLabelledThreshold);
+
+    /**
+     * @return mLabelledProbability
+     */
+    double GetLabelledProbability() const;
+
+    /**
+     * Set mLabelledProbability.
+     *
+     * @param labelledProbability the value of mLabelledProbability
+     */
+    void SetLabelledProbability(double labelledProbability);
+
 
     /**
      * Overridden OutputCellCycleModelParameters() method.

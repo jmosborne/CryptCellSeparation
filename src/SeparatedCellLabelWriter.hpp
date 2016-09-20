@@ -33,43 +33,28 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef CELLPARENTID_HPP_
-#define CELLPARENTID_HPP_
+#ifndef SeparatedCELLLABELWRITER_HPP_
+#define SeparatedCELLLABELWRITER_HPP_
 
-#include <boost/shared_ptr.hpp>
-#include "UblasVectorInclude.hpp"
-#include "AbstractCellProperty.hpp"
 #include "ChasteSerialization.hpp"
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/vector.hpp>
-#include "Exception.hpp"
+#include "AbstractCellWriter.hpp"
+
 /**
- * Cell parent ID trcker class.
+ * A class written using the visitor pattern for writing cell labels to file.
  *
- * Each Cell owns a CellPropertyCollection, which may include a shared pointer
- * to an object of this type. When a Cell that has a Parent ID divides, the daughter
- * cells both have the same Parent ID.
- *
- * The CellParentId object keeps track of the Parent ID of each cell.
+ * The output file is called results.vizseparatedlabels by default. If VTK is switched on,
+ * then the writer also specifies the VTK output for each cell, which is stored in
+ * the VTK cell data "Cell labels" by default.
  */
-class CellParentId : public AbstractCellProperty
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+class SeparatedCellLabelWriter : public AbstractCellWriter<ELEMENT_DIM, SPACE_DIM>
 {
 private:
-
-    /**
-     * Cell parent ID
-     */
-    unsigned mParentId;
-
-    /**
-     * Store the location that the prent cell divided
-     */
-    // c_vector<double,3> mDivisionLocation;
-
     /** Needed for serialization. */
     friend class boost::serialization::access;
     /**
-     * Archive the member variables.
+     * Serialize the object and its member variables.
      *
      * @param archive the archive
      * @param version the current version of this class
@@ -77,48 +62,47 @@ private:
     template<class Archive>
     void serialize(Archive & archive, const unsigned int version)
     {
-        archive & boost::serialization::base_object<AbstractCellProperty>(*this);
-        archive & mParentId;
-        // archive & mDivisionLocation;
+        archive & boost::serialization::base_object<AbstractCellWriter<ELEMENT_DIM, SPACE_DIM> >(*this);
     }
 
 public:
 
     /**
-     * Constructor.
+     * Default constructor.
+     */
+    SeparatedCellLabelWriter();
+
+    /* Overridden GetCellDataForVtkOutput() method.
      *
-     * @param parentId the ID of the parent of this cell.
+     * Get a double associated with a cell. This method reduces duplication
+     * of code between the methods VisitCell() and AddVtkData().
+     *
+     * @param pCell a cell
+     * @param pCellPopulation a pointer to the cell population owning the cell
+     *
+     * @return data associated with the cell
      */
-    CellParentId(unsigned parentId = UNSIGNED_UNSET);
+    double GetCellDataForVtkOutput(CellPtr pCell, AbstractCellPopulation<ELEMENT_DIM, SPACE_DIM>* pCellPopulation);
 
     /**
-     * Destructor.
+     * Overridden VisitCell() method.
+     *
+     * Visit a cell and write its label.
+     *
+     * Outputs a line of space-separated values of the form:
+     * ...[cell label] [location index] [x-pos] [y-pos] [z-pos] ...
+     * with [y-pos] and [z-pos] included for 2 and 3 dimensional simulations, respectively.
+     *
+     * This is appended to the output written by AbstractCellBasedWriter, which is a single
+     * value [present simulation time], followed by a tab.
+     *
+     * @param pCell a cell
+     * @param pCellPopulation a pointer to the cell population owning the cell
      */
-    virtual ~CellParentId();
-
-    /**
-     * @return #mParentId.
-     */
-    unsigned GetParentId() const;
-
-    /**
-     * @param mParentId.
-     */
-    void SetParentId(double parentId);
-
-    /**
-     * @return #mDivisionLocation.
-     */
-    // c_vector<double, 3> GetDivisionLocation();
-
-    /**
-     * @param mDivisionLocation.
-     */
-    // void SetDivisionLocation(c_vector<double, 3> divisionLocation);
+    virtual void VisitCell(CellPtr pCell, AbstractCellPopulation<ELEMENT_DIM, SPACE_DIM>* pCellPopulation);
 };
 
 #include "SerializationExportWrapper.hpp"
-// Declare identifier for the serializer
-CHASTE_CLASS_EXPORT(CellParentId)
+EXPORT_TEMPLATE_CLASS_ALL_DIMS(SeparatedCellLabelWriter)
 
-#endif /* CELLPARENTID_HPP_ */
+#endif /* SeparatedCELLLABELWRITER_HPP_ */

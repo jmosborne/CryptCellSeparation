@@ -33,43 +33,36 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef CELLPARENTID_HPP_
-#define CELLPARENTID_HPP_
+#ifndef VARIABLESEPARATIONCENTREBASEDDIVISIONRULE_HPP_
+#define VARIABLESEPARATIONCENTREBASEDDIVISIONRULE_HPP_
 
-#include <boost/shared_ptr.hpp>
-#include "UblasVectorInclude.hpp"
-#include "AbstractCellProperty.hpp"
 #include "ChasteSerialization.hpp"
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/vector.hpp>
-#include "Exception.hpp"
+#include "AbstractCentreBasedDivisionRule.hpp"
+#include "AbstractCentreBasedCellPopulation.hpp"
+
+// Forward declaration prevents circular include chain
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM> class AbstractCentreBasedCellPopulation;
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM> class AbstractCentreBasedDivisionRule;
+
 /**
- * Cell parent ID trcker class.
- *
- * Each Cell owns a CellPropertyCollection, which may include a shared pointer
- * to an object of this type. When a Cell that has a Parent ID divides, the daughter
- * cells both have the same Parent ID.
- *
- * The CellParentId object keeps track of the Parent ID of each cell.
+ * A class to generate two daughter cell positions, located a variable distance
+ * apart, defined by cell label
+ * along a random axis. The midpoint between the two daughter cell
+ * positions corresponds to the parent cell's position.
  */
-class CellParentId : public AbstractCellProperty
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM=ELEMENT_DIM>
+class VariableSeparationCentreBasedDivisionRule : public AbstractCentreBasedDivisionRule<ELEMENT_DIM, SPACE_DIM>
 {
 private:
 
-    /**
-     * Cell parent ID
-     */
-    unsigned mParentId;
+    double mUnlabeledSeparation;
 
-    /**
-     * Store the location that the prent cell divided
-     */
-    // c_vector<double,3> mDivisionLocation;
+    double mLabeledSeparation;
 
-    /** Needed for serialization. */
     friend class boost::serialization::access;
     /**
-     * Archive the member variables.
+     * Serialize the object and its member variables.
      *
      * @param archive the archive
      * @param version the current version of this class
@@ -77,48 +70,38 @@ private:
     template<class Archive>
     void serialize(Archive & archive, const unsigned int version)
     {
-        archive & boost::serialization::base_object<AbstractCellProperty>(*this);
-        archive & mParentId;
-        // archive & mDivisionLocation;
+        archive & boost::serialization::base_object<AbstractCentreBasedDivisionRule<ELEMENT_DIM, SPACE_DIM> >(*this);
+        archive & mUnlabeledSeparation;
+        archive & mLabeledSeparation;
     }
 
 public:
 
     /**
-     * Constructor.
+     * Default constructor.
+     */
+    VariableSeparationCentreBasedDivisionRule();
+
+    /**
+     * Empty destructor.
+     */
+    virtual ~VariableSeparationCentreBasedDivisionRule()
+    {
+    }
+
+    /**
+     * Overridden CalculateCellDivisionVector() method.
      *
-     * @param parentId the ID of the parent of this cell.
+     * @param pParentCell  The cell to divide
+     * @param rCellPopulation  The centre-based cell population
+     *
+     * @return the two daughter cell positions.
      */
-    CellParentId(unsigned parentId = UNSIGNED_UNSET);
-
-    /**
-     * Destructor.
-     */
-    virtual ~CellParentId();
-
-    /**
-     * @return #mParentId.
-     */
-    unsigned GetParentId() const;
-
-    /**
-     * @param mParentId.
-     */
-    void SetParentId(double parentId);
-
-    /**
-     * @return #mDivisionLocation.
-     */
-    // c_vector<double, 3> GetDivisionLocation();
-
-    /**
-     * @param mDivisionLocation.
-     */
-    // void SetDivisionLocation(c_vector<double, 3> divisionLocation);
+    virtual std::pair<c_vector<double, SPACE_DIM>, c_vector<double, SPACE_DIM> > CalculateCellDivisionVector(CellPtr pParentCell,
+        AbstractCentreBasedCellPopulation<ELEMENT_DIM, SPACE_DIM>& rCellPopulation);
 };
 
 #include "SerializationExportWrapper.hpp"
-// Declare identifier for the serializer
-CHASTE_CLASS_EXPORT(CellParentId)
+EXPORT_TEMPLATE_CLASS_ALL_DIMS(VariableSeparationCentreBasedDivisionRule)
 
-#endif /* CELLPARENTID_HPP_ */
+#endif // VARIABLESEPARATIONCENTREBASEDDIVISIONRULE_HPP_

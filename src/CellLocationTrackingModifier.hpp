@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2005-2016, University of Oxford.
+Copyright (c) 2005-2015, University of Oxford.
 All rights reserved.
 
 University of Oxford means the Chancellor, Masters and Scholars of the
@@ -33,92 +33,84 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifndef CELLPARENTID_HPP_
-#define CELLPARENTID_HPP_
+#ifndef CellLocationTrackingModifier_HPP_
+#define CellLocationTrackingModifier_HPP_
 
-#include <boost/shared_ptr.hpp>
-#include "UblasVectorInclude.hpp"
-#include "AbstractCellProperty.hpp"
 #include "ChasteSerialization.hpp"
 #include <boost/serialization/base_object.hpp>
-#include <boost/serialization/vector.hpp>
-#include "Exception.hpp"
+
+#include "AbstractCellBasedSimulationModifier.hpp"
+
+
 /**
- * Cell parent ID trcker class.
- *
- * Each Cell owns a CellPropertyCollection, which may include a shared pointer
- * to an object of this type. When a Cell that has a Parent ID divides, the daughter
- * cells both have the same Parent ID.
- *
- * The CellParentId object keeps track of the Parent ID of each cell.
+ * A modifier class which tracks the position of cells in CellData
  */
-class CellParentId : public AbstractCellProperty
+template<unsigned DIM>
+class CellLocationTrackingModifier : public AbstractCellBasedSimulationModifier<DIM,DIM>
 {
-private:
-
-    /**
-     * Cell parent ID
-     */
-    unsigned mParentId;
-
-    /**
-     * Store the location that the prent cell divided
-     */
-    // c_vector<double,3> mDivisionLocation;
-
     /** Needed for serialization. */
     friend class boost::serialization::access;
     /**
-     * Archive the member variables.
+     * Boost Serialization method for archiving/checkpointing.
+     * Archives the object and its member variables.
      *
-     * @param archive the archive
-     * @param version the current version of this class
+     * @param archive  The boost archive.
+     * @param version  The current version of this class.
      */
     template<class Archive>
     void serialize(Archive & archive, const unsigned int version)
     {
-        archive & boost::serialization::base_object<AbstractCellProperty>(*this);
-        archive & mParentId;
-        // archive & mDivisionLocation;
-    }
+        archive & boost::serialization::base_object<AbstractCellBasedSimulationModifier<DIM,DIM> >(*this);
+   }
 
 public:
 
     /**
-     * Constructor.
-     *
-     * @param parentId the ID of the parent of this cell.
+     * Default constructor.
      */
-    CellParentId(unsigned parentId = UNSIGNED_UNSET);
+    CellLocationTrackingModifier();
 
     /**
      * Destructor.
      */
-    virtual ~CellParentId();
+    virtual ~CellLocationTrackingModifier();
 
     /**
-     * @return #mParentId.
+     * Overridden UpdateAtEndOfTimeStep() method.
+     *
+     * Specify what to do in the simulation at the end of each time step.
+     *
+     * @param rCellPopulation reference to the cell population
      */
-    unsigned GetParentId() const;
+    virtual void UpdateAtEndOfTimeStep(AbstractCellPopulation<DIM,DIM>& rCellPopulation);
 
     /**
-     * @param mParentId.
+     * Overridden SetupSolve() method.
+     *
+     * Specify what to do in the simulation before the start of the time loop.
+     *
+     * @param rCellPopulation reference to the cell population
+     * @param outputDirectory the output directory, relative to where Chaste output is stored
      */
-    void SetParentId(double parentId);
+    virtual void SetupSolve(AbstractCellPopulation<DIM,DIM>& rCellPopulation, std::string outputDirectory);
 
     /**
-     * @return #mDivisionLocation.
+     * Helper method to get the locations of cells and save in the cells CellData.
+     *
+     * @param rCellPopulation reference to the cell population
      */
-    // c_vector<double, 3> GetDivisionLocation();
+    void UpdateCellData(AbstractCellPopulation<DIM,DIM>& rCellPopulation);
 
     /**
-     * @param mDivisionLocation.
+     * Overridden OutputSimulationModifierParameters() method.
+     * Output any simulation modifier parameters to file.
+     *
+     * @param rParamsFile the file stream to which the parameters are output
      */
-    // void SetDivisionLocation(c_vector<double, 3> divisionLocation);
+    void OutputSimulationModifierParameters(out_stream& rParamsFile);
 };
 
 #include "SerializationExportWrapper.hpp"
-// Declare identifier for the serializer
-CHASTE_CLASS_EXPORT(CellParentId)
+EXPORT_TEMPLATE_CLASS_SAME_DIMS(CellLocationTrackingModifier)
 
-#endif /* CELLPARENTID_HPP_ */
+#endif /*CellLocationTrackingModifier_HPP_*/
