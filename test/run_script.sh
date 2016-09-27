@@ -30,7 +30,7 @@ do
     	# ">" directs std::cout to the file.
     	# "2>&1" directs std::cerr to the same place.
     	# "&" on the end lets the script carry on and not wait until this has finished.
-    	nice -20 ../build/optimised/TestCryptSingleRunRunner -labeled_ratio ${LABELED_RATIO} - separation_multiplier ${SEPARATION[$j]} > output/Run_${i}_${LABELED_RATIO}_${SEPARATION[$j]}_Output.txt 2>&1 &
+    	nice -20 ../build/optimised/Test2dCryptSingleRunRunner -labeled_ratio ${LABELED_RATIO} -separation_multiplier ${SEPARATION[$j]} > output/Run_${i}_${LABELED_RATIO}_${SEPARATION[$j]}_Output.txt 2>&1 &
     	#nice -20 ../build/optimised/TestCryptSingleRunRunner -sim_index $i -labeled_SEPARATION ${SEPARATION[$j]} > output/Run_${i}_${SEPARATION[$j]}_Output.txt 2>&1 &
     done
 done

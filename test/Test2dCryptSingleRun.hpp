@@ -71,7 +71,7 @@ public:
 		double default_separation = 1.0;
 
 
-    	double end_time = 12;
+    	double end_time = 1200;
         // Crypt Setup
     	double crypt_width = 16; //16
         double crypt_length = 12; // Dimensions from Cell Migration Plos One
