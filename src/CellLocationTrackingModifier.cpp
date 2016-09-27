@@ -76,14 +76,23 @@ void CellLocationTrackingModifier<DIM>::UpdateCellData(AbstractCellPopulation<DI
          cell_iter != rCellPopulation.End();
          ++cell_iter)
     {
-        assert(DIM==3);
+        
 
         c_vector<double,DIM> cell_location= rCellPopulation.GetLocationOfCellCentre(*cell_iter);
 
         // Store the cell's location in CellData
+
+        if (DIM>2)
+        {
+            cell_iter->GetCellData()->SetItem("cell_location_z", cell_location[2]);
+        }
+        if (DIM>1)
+        {
+            cell_iter->GetCellData()->SetItem("cell_location_y", cell_location[1]);
+            
+        }
         cell_iter->GetCellData()->SetItem("cell_location_x", cell_location[0]);
-        cell_iter->GetCellData()->SetItem("cell_location_y", cell_location[1]);
-        cell_iter->GetCellData()->SetItem("cell_location_z", cell_location[2]);
+
     }
 }
 

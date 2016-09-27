@@ -47,10 +47,11 @@ CellParentIdWriter<ELEMENT_DIM, SPACE_DIM>::CellParentIdWriter()
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 double CellParentIdWriter<ELEMENT_DIM, SPACE_DIM>::GetCellParentId(CellPtr pCell)
 {
-    CellPropertyCollection cell_parent_id_collection = pCell->rGetCellPropertyCollection().GetPropertiesType<CellParentId>();
-    assert(cell_parent_id_collection.GetSize() == 1);
-    boost::shared_ptr<CellParentId> p_cell_parent_id = boost::static_pointer_cast<CellParentId>(cell_parent_id_collection.GetProperty());
-    return p_cell_parent_id->GetParentId();
+    // CellPropertyCollection cell_parent_id_collection = pCell->rGetCellPropertyCollection().GetPropertiesType<CellParentId>();
+    // assert(cell_parent_id_collection.GetSize() == 1);
+    // boost::shared_ptr<CellParentId> p_cell_parent_id = boost::static_pointer_cast<CellParentId>(cell_parent_id_collection.GetProperty());
+    // return p_cell_parent_id->GetParentId();
+    return pCell->GetCellData()->GetItem("parent_id");
 }
 
 
@@ -69,15 +70,15 @@ c_vector<double, 3> CellParentIdWriter<ELEMENT_DIM, SPACE_DIM>::GetCellDivisionL
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 double CellParentIdWriter<ELEMENT_DIM, SPACE_DIM>::GetCellDataForVtkOutput(CellPtr pCell, AbstractCellPopulation<ELEMENT_DIM, SPACE_DIM>* pCellPopulation)
 {
-    double cell_id = GetCellParentId(pCell);
-    return cell_id;
+    double parent_cell_id = GetCellParentId(pCell);
+    return parent_cell_id;
 }
 
 template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 void CellParentIdWriter<ELEMENT_DIM, SPACE_DIM>::VisitCell(CellPtr pCell, AbstractCellPopulation<ELEMENT_DIM, SPACE_DIM>* pCellPopulation)
 {
     unsigned cell_id = pCell->GetCellId();
-    unsigned parent_cell_id = GetCellParentId(pCell);
+    int parent_cell_id = GetCellParentId(pCell);
     
     unsigned location_index = pCellPopulation->GetLocationIndexUsingCell(pCell);
     *this->mpOutStream << " " << cell_id << " " << parent_cell_id << " " << location_index;

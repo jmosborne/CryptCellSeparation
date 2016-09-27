@@ -45,6 +45,8 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "WildTypeCellMutationState.hpp"
 #include "SeparatedCellLabel.hpp"
 #include "CellParentId.hpp"
+#include "CellId.hpp"
+#include "SmartPointers.hpp"
 #include "Debug.hpp"
 
 
@@ -300,11 +302,16 @@ void CryptCellCycleModel::ResetForDivision()
 {
 
     // This is the new code to track parent IDs and have labeled and non labeled Cells //
+    mpCell->GetCellData()->SetItem("parent_id",mpCell->GetCellId());
+
     // Reset the cell parent ID
-    CellPropertyCollection cell_parent_id_collection = mpCell->rGetCellPropertyCollection().GetPropertiesType<CellParentId>();
-    assert(cell_parent_id_collection.GetSize() == 1);
-    boost::shared_ptr<CellParentId> p_cell_parent_id = boost::static_pointer_cast<CellParentId>(cell_parent_id_collection.GetProperty());
-    p_cell_parent_id->SetParentId(mpCell->GetCellId());
+    // CellPropertyCollection cell_parent_id_collection = mpCell->rGetCellPropertyCollection().GetPropertiesType<CellParentId>();
+    // assert(cell_parent_id_collection.GetSize() == 1);
+    // boost::shared_ptr<CellParentId> p_cell_parent_id = boost::static_pointer_cast<CellParentId>(cell_parent_id_collection.GetProperty());
+    // p_cell_parent_id->SetParentId(mpCell->GetCellId());
+
+
+
 
     switch (mDimension)
     {
@@ -318,7 +325,16 @@ void CryptCellCycleModel::ResetForDivision()
             mpCell->GetCellData()->SetItem("division_location_y",cell_location_y);
             mpCell->GetCellData()->SetItem("division_location_z",cell_location_z);
             break;
-        }        
+        }  
+        case 2:
+        {
+            double cell_location_x = mpCell->GetCellData()->GetItem("cell_location_x");
+            double cell_location_y = mpCell->GetCellData()->GetItem("cell_location_y");
+
+            mpCell->GetCellData()->SetItem("division_location_x",cell_location_x);
+            mpCell->GetCellData()->SetItem("division_location_y",cell_location_y);
+            break;
+        }      
         default:
         NEVER_REACHED;
     }
@@ -337,6 +353,12 @@ void CryptCellCycleModel::ResetForDivision()
         boost::shared_ptr<AbstractCellProperty> p_label = mpCell->rGetCellPropertyCollection().GetCellPropertyRegistry()->Get<SeparatedCellLabel>();
         mpCell->AddCellProperty(p_label);
     }
+
+    // Finally give the cell a new ID
+    CellPropertyCollection cell_id_collection = mpCell->rGetCellPropertyCollection().GetPropertiesType<CellId>();
+    assert(cell_id_collection.GetSize() == 1);
+    boost::shared_ptr<CellId> p_cell_id = boost::static_pointer_cast<CellId>(cell_id_collection.GetProperty());
+    p_cell_id->AssignCellId();
     //////////////////////////////////////////////////////////////////////////////
 
 

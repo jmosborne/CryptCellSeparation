@@ -69,15 +69,6 @@ void SeparatedCellLabelWriter<ELEMENT_DIM, SPACE_DIM>::VisitCell(CellPtr pCell, 
     }
 
     *this->mpOutStream << " " << label;
-
-    unsigned location_index = pCellPopulation->GetLocationIndexUsingCell(pCell);
-    *this->mpOutStream << " " << location_index;
-
-    c_vector<double, SPACE_DIM> coords = pCellPopulation->GetLocationOfCellCentre(pCell);
-    for (unsigned i=0; i<SPACE_DIM; i++)
-    {
-        *this->mpOutStream << " " << coords[i];
-    }
 }
 
 // Explicit instantiation

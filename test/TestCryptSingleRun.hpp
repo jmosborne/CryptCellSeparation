@@ -63,8 +63,10 @@ public:
 
     void Test3DCrypt() throw (Exception)
     {
-    	double proportion_labeled_cells = CommandLineArguments::Instance()->GetDoubleCorrespondingToOption("-labeled_ratio");
-    	//double proportion_labeled_cells = 0.5;
+    	//double proportion_labeled_cells = CommandLineArguments::Instance()->GetDoubleCorrespondingToOption("-labeled_ratio");
+    	double proportion_labeled_cells = 0.5;
+		double separation_multiplier = 3.0;
+
 
     	double end_time = 1200;
         // Crypt Setup
@@ -88,7 +90,7 @@ public:
 		unsigned cell_proliferation_model = 3;  // Optimal from MBOC paper 
 		bool wnt_dependent_ccd = true;   // Optimal from MBOC paper
         double param = 0.6; // Optimal from MBOC paper
-        double CIparam = 0.9; // Optimal from MBOC paper 0.5 CHECK!!!!
+        double CIparam = 0.8; // Optimal from MBOC paper is 0.9!! CHECK!!!!
 
 				// Create some starter nodes
 				std::vector<Node<3>*> nodes;
@@ -133,6 +135,7 @@ public:
 				    cells[cell_index]->GetCellData()->SetItem("division_location_y",0);
 				    cells[cell_index]->GetCellData()->SetItem("division_location_z",0);
 				    cells[cell_index]->GetCellData()->SetItem("division_time",0);
+				    cells[cell_index]->GetCellData()->SetItem("parent_id",-1);
 
 
 					// // Specify CCM
@@ -201,7 +204,8 @@ public:
 				crypt.SetAbsoluteMovementThreshold(50.0);
 
 				// Set the division rule for our population to be the random direction division rule
-       			boost::shared_ptr<AbstractCentreBasedDivisionRule<3,3> > p_division_rule(new VariableSeparationCentreBasedDivisionRule<3,3>());
+       			boost::shared_ptr<VariableSeparationCentreBasedDivisionRule<3,3> > p_division_rule(new VariableSeparationCentreBasedDivisionRule<3,3>());
+       			p_division_rule->SetLabeledSeparationMultiplier(separation_multiplier);
         		crypt.SetCentreBasedDivisionRule(p_division_rule);
 
 				// Create an instance of a Wnt concentration NOTE DO THIS BEFORE THE SIMULATION OTHERWISE CELLS CANT INITIALISE

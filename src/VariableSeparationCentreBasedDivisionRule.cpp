@@ -42,8 +42,23 @@ template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
 VariableSeparationCentreBasedDivisionRule<ELEMENT_DIM, SPACE_DIM>::VariableSeparationCentreBasedDivisionRule()
     : AbstractCentreBasedDivisionRule<ELEMENT_DIM,SPACE_DIM>(),
       mUnlabeledSeparation(0.5*7.0),
-      mLabeledSeparation(3.0*7.0) 
+      mLabeledSeparationMultiplier(6) 
 {
+}
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void  VariableSeparationCentreBasedDivisionRule<ELEMENT_DIM, SPACE_DIM>::SetCellSeparation(double unLabeledSeparation)
+{
+    assert(unLabeledSeparation>0);
+    mUnlabeledSeparation = unLabeledSeparation;
+}
+
+
+template<unsigned ELEMENT_DIM, unsigned SPACE_DIM>
+void  VariableSeparationCentreBasedDivisionRule<ELEMENT_DIM, SPACE_DIM>::SetLabeledSeparationMultiplier(double labeledSeparationMultiplier)
+{
+    assert(labeledSeparationMultiplier>0);
+    mLabeledSeparationMultiplier = labeledSeparationMultiplier;
 }
 
 
@@ -56,7 +71,7 @@ std::pair<c_vector<double, SPACE_DIM>, c_vector<double, SPACE_DIM> > VariableSep
     double separation = mUnlabeledSeparation;
     if (pParentCell->HasCellProperty<SeparatedCellLabel>())
     {
-        separation = mLabeledSeparation;
+        separation = mLabeledSeparationMultiplier*mUnlabeledSeparation;
       //  TRACE("HELLO")
     }
 ///////////////

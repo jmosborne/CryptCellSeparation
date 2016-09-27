@@ -58,7 +58,7 @@ private:
 
     double mUnlabeledSeparation;
 
-    double mLabeledSeparation;
+    double mLabeledSeparationMultiplier;
 
     friend class boost::serialization::access;
     /**
@@ -72,7 +72,7 @@ private:
     {
         archive & boost::serialization::base_object<AbstractCentreBasedDivisionRule<ELEMENT_DIM, SPACE_DIM> >(*this);
         archive & mUnlabeledSeparation;
-        archive & mLabeledSeparation;
+        archive & mLabeledSeparationMultiplier;
     }
 
 public:
@@ -88,6 +88,10 @@ public:
     virtual ~VariableSeparationCentreBasedDivisionRule()
     {
     }
+
+    void SetLabeledSeparationMultiplier(double labeledSeparationMultiplier);
+
+    void SetCellSeparation(double unLabeledSeparation);
 
     /**
      * Overridden CalculateCellDivisionVector() method.
