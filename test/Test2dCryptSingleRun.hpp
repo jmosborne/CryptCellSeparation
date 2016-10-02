@@ -71,7 +71,7 @@ public:
 		double default_separation = 1.0;
 
 
-    	double end_time = 1200;
+    	double end_time = 2200;
         // Crypt Setup
     	double crypt_width = 16; //16
         double crypt_length = 12; // Dimensions from Cell Migration Plos One
@@ -199,7 +199,7 @@ public:
         simulator.AddCellPopulationBoundaryCondition(p_bcs);
 
 		// Create cell killer and pass in to crypt simulation
-		MAKE_PTR_ARGS(PlaneBasedCellKiller<2>, p_cell_killer,(&crypt, crypt_length*unit_vector<double>(2,1), unit_vector<double>(2,1)));
+		MAKE_PTR_ARGS(PlaneBasedCellKiller<2>, p_cell_killer,(&crypt, crypt_length*unit_vector<double>(2,1), unit_vector<double>(2,1),output_directory));
 		simulator.AddCellKiller(p_cell_killer);
 
 		// Run simulation
