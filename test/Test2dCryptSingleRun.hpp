@@ -199,7 +199,7 @@ public:
         simulator.AddCellPopulationBoundaryCondition(p_bcs);
 
 		// Create cell killer and pass in to crypt simulation
-		MAKE_PTR_ARGS(PlaneBasedCellKiller<2>, p_cell_killer,(&crypt, crypt_length*unit_vector<double>(2,1), unit_vector<double>(2,1),output_directory));
+		MAKE_PTR_ARGS(PlaneBasedCellKiller<2>, p_cell_killer,(&crypt, crypt_length*unit_vector<double>(2,1), unit_vector<double>(2,1)));
 		simulator.AddCellKiller(p_cell_killer);
 
 		// Run simulation
