@@ -71,16 +71,16 @@ public:
 		double default_separation = 1.0;
 
 
-    	double end_time = 2200;
+    	double end_time = 1200;
         // Crypt Setup
     	double crypt_width = 16; //16
         double crypt_length = 12; // Dimensions from Cell Migration Plos One
 
     	// Cell Model setup
-		unsigned cell_proliferation_model = 2; // 3  // Optimal from MBOC paper Spatial Wnt at birth
-		bool wnt_dependent_ccd = false;   // Optimal from MBOC paper is true!!!
-        double param = 0.5; // 
-        double CIparam = 0.0; // No CI at moment all cells proliferate
+		unsigned cell_proliferation_model = 3; // 3  // Optimal from MBOC paper Spatial Wnt at birth is 3
+		bool wnt_dependent_ccd = true;   // Optimal from MBOC paper is true
+        double param = 0.6; // Optimal from MBOC is 0.6
+        double CIparam = 0.8; // optimal from MBOC should be 0.9 in 3d?? but in 2d here
 
         // Create a simple mesh
         HoneycombMeshGenerator generator(crypt_width, crypt_length, 0);
@@ -98,7 +98,7 @@ public:
 		MAKE_PTR(CellLabel,p_label);
 
 		// Create cells
-		std::vector<CellPtr> cells;
+		std::vector<CellPtr> cells; 
 		CellsGenerator<CryptCellCycleModel, 2> cells_generator;
 		cells_generator.GenerateBasicRandom(cells, p_mesh->GetNumNodes(),p_transit_type);
 

@@ -244,8 +244,7 @@ public:
 				// MAKE_PTR(RepulsionForce<3>, p_force);
 				// p_force->SetMeinekeSpringStiffness(30.0); //normally 15.0 but 30 in all CellBased Papers;
 				// simulator.AddForce(p_force);
-				
-
+			
 				// Apply a retainer to keep stem and paneth cells at the base of the crypt
 				MAKE_PTR(CellRetainerForce<3>, p_retainer_force);
 				p_retainer_force->SetStemCellForceMagnitudeParameter(stem_retainer_force_magnitude);
