@@ -71,7 +71,7 @@ public:
 		double default_separation = 1.0*7.0; // 1 CD
 
 
-    	double end_time = 2200;
+    	double end_time = 6000;
         // Crypt Setup
         double cell_radius = 3.5;
         double crypt_length = 70; //70
