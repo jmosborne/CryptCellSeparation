@@ -25,13 +25,20 @@ LABELED_RATIO=0.5;
 # SEPARATION[11]="3.75"
 # SEPARATION[12]="4"
 
-SEPARATION[0]="1"
-SEPARATION[1]="1.5"
-SEPARATION[2]="2"
-SEPARATION[3]="2.5"
-SEPARATION[4]="3"
-SEPARATION[5]="3.5"
-SEPARATION[6]="4"
+# SEPARATION[0]="1"
+# SEPARATION[1]="1.5"
+# SEPARATION[2]="2"
+# SEPARATION[3]="2.5"
+# SEPARATION[4]="3"
+# SEPARATION[5]="3.5"
+# SEPARATION[6]="4"
+
+SEPARATION[0]="1.25"
+SEPARATION[1]="1.75"
+SEPARATION[2]="2.25"
+SEPARATION[3]="2.75"
+SEPARATION[4]="3.25"
+SEPARATION[5]="3.75"
 
 
 for (( i=0 ; i<${num_sims} ; i++))
@@ -44,7 +51,7 @@ do
     	# ">" directs std::cout to the file.
     	# "2>&1" directs std::cerr to the same place.
     	# "&" on the end lets the script carry on and not wait until this has finished.
-    	nice -20 ../build/optimised/Test2dCryptSingleRunRunner -labeled_ratio ${LABELED_RATIO} -separation_multiplier ${SEPARATION[$j]} > output/Run_${i}_${LABELED_RATIO}_${SEPARATION[$j]}_Output.txt 2>&1 &
+    	nice -20 ../build/optimised/TestCryptSingleRunRunner -labeled_ratio ${LABELED_RATIO} -separation_multiplier ${SEPARATION[$j]} > output/Run_${i}_${LABELED_RATIO}_${SEPARATION[$j]}_Output.txt 2>&1 &
     	#nice -20 ../build/optimised/TestCryptSingleRunRunner -sim_index $i -labeled_SEPARATION ${SEPARATION[$j]} > output/Run_${i}_${SEPARATION[$j]}_Output.txt 2>&1 &
     done
 done

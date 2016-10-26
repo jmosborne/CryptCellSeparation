@@ -207,6 +207,7 @@ public:
 
         // Clear memory
         delete p_mesh;
+        delete p_generating_mesh;
 	}
 };
 
