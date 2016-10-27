@@ -71,7 +71,7 @@ public:
 		double default_separation = 1.0*7.0; // 1 CD
 
 
-    	double end_time = 6000;
+    	double end_time = 11000;
         // Crypt Setup
         double cell_radius = 3.5;
         double crypt_length = 70; //70
@@ -176,6 +176,8 @@ public:
             // Contact Inhibition specific parameters
             dynamic_cast<CryptCellCycleModel*>(cells[cell_index]->GetCellCycleModel())->SetEquilibriumVolume(M_PI*4.0/3.0*cell_radius*cell_radius*cell_radius);
             dynamic_cast<CryptCellCycleModel*>(cells[cell_index]->GetCellCycleModel())->SetQuiescentVolumeFraction(CIparam);
+
+            dynamic_cast<CryptCellCycleModel*>(cells[cell_index]->GetCellCycleModel())->SetLabelledProbability(proportion_labeled_cells);
 		}	
 
 		// Make some cells paneth cells
