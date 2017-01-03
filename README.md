@@ -2,6 +2,8 @@
 
 ## Code for "Post-mitotic positioning directs niche exit in intestinal epithelium"
 
+This project contains the code necesary for running the simulations presented in C
+
 This model is an extension on a model originally presented in Dunn et al. (2016) doi: 10.1091/mbc.E15-12-0854 and makes use of the cell cycle and geometry model given here https://chaste.cs.ox.ac.uk/trac/wiki/PaperTutorials/CryptProliferationDistribution. 
 
 Before looking at this, you may wish to look at some of the basic user tutorials for Chaste https://chaste.cs.ox.ac.uk/trac/wiki/UserTutorials.
@@ -39,5 +41,5 @@ sh run_script.sh
 
 **NB**: the paper was developed with release version 3.4. It will not work with with release version 3.3 or under.
 
-For further information on using Chaste, see the [wiki:ChasteGuides extensive guide material].
-You may also wish to look at some of the [wiki:UserTutorials basic user tutorials].
+For further information on using Chaste, see the extensive guide material (https://chaste.cs.ox.ac.uk/trac/wiki/ChasteGuides).
+You may also wish to look at some of the basic user tutorials (https://chaste.cs.ox.ac.uk/trac/wiki/UserTutorials).
