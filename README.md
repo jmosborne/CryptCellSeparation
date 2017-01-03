@@ -26,18 +26,18 @@ There are two folders - `src` and `test`.
 
 ## Running tests
 You can then run tests and simulations with,
-
-> cd <Chaste3.4 path>
-
-> scons b=GccOpt cl=0 co=1 ts=projects/CryptCellSeparation/test/TestCryptSingleRun.hpp
+```
+cd <Chaste3.4 path>
+scons b=GccOpt cl=0 co=1 ts=projects/CryptCellSeparation/test/TestCryptSingleRun.hpp
+```
 
 Note that this will only compile the test. The following commands will run the parammeter sweep detailed in the paper:
+```
+cd projects/CryptCellSeparation/test/
+sh run_script.sh
+```
 
-> cd projects/CryptCellSeparation/test/
-
-> sh run_script.sh
-
-'''NB''': the paper was developed with release version 3.4. It will not work with with release version 3.3 or under.
+**NB**: the paper was developed with release version 3.4. It will not work with with release version 3.3 or under.
 
 For further information on using Chaste, see the [wiki:ChasteGuides extensive guide material].
 You may also wish to look at some of the [wiki:UserTutorials basic user tutorials].
