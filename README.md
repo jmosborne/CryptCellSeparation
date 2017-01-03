@@ -2,7 +2,7 @@
 
 ## Code for "Post-mitotic positioning directs niche exit in intestinal epithelium"
 
-This project contains the code necesary for running the simulations presented in C
+This project contains the code necesary for running the simulations presented in Carroll et al. "Post-mitotic positioning directs niche exit in intestinal epithelium".
 
 This model is an extension on a model originally presented in Dunn et al. (2016) doi: 10.1091/mbc.E15-12-0854 and makes use of the cell cycle and geometry model given here https://chaste.cs.ox.ac.uk/trac/wiki/PaperTutorials/CryptProliferationDistribution. 
 
