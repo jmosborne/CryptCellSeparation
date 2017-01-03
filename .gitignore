@@ -7,7 +7,7 @@
 *.so
 *.pyc
 build/*
-test/output/*
+#test/output/*
 
 # Rndom OSX files
 *.DS_Store
