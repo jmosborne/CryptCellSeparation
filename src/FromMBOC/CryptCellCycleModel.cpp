@@ -343,16 +343,16 @@ void CryptCellCycleModel::ResetForDivision()
    
     // Now reset whether cell is labeled or not.
 
-    // Removes the cell label
-    mpCell->RemoveCellProperty<SeparatedCellLabel>();
+    // // Removes the cell label
+    // mpCell->RemoveCellProperty<SeparatedCellLabel>();
 
 
-    if (RandomNumberGenerator::Instance()->ranf() < mLabelledProbability)
-    {
-      //TRACE("HELLO");
-        boost::shared_ptr<AbstractCellProperty> p_label = mpCell->rGetCellPropertyCollection().GetCellPropertyRegistry()->Get<SeparatedCellLabel>();
-        mpCell->AddCellProperty(p_label);
-    }
+    // if (RandomNumberGenerator::Instance()->ranf() < mLabelledProbability)
+    // {
+    //   //TRACE("HELLO");
+    //     boost::shared_ptr<AbstractCellProperty> p_label = mpCell->rGetCellPropertyCollection().GetCellPropertyRegistry()->Get<SeparatedCellLabel>();
+    //     mpCell->AddCellProperty(p_label);
+    // }
 
     // Finally give the cell a new ID
     CellPropertyCollection cell_id_collection = mpCell->rGetCellPropertyCollection().GetPropertiesType<CellId>();
