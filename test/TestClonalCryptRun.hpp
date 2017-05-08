@@ -91,8 +91,8 @@ public:
     	unsigned num_separation_sweeps = 4;
 		double separation_multipliers[4] = {1, 2, 3, 4};
 
-        unsigned num_ratio_sweeps = 4;
-        double separated_proportions[4] = {0.2, 0.4, 0.6, 0.8};
+        unsigned num_ratio_sweeps = 5;
+        double separated_proportions[5] = {0.1, 0.3, 0.5, 0.7, 0.9};
 
         // unsigned start_index = 0; 
         // unsigned num_runs = 1;
@@ -103,8 +103,8 @@ public:
         // unsigned num_ratio_sweeps= 1;
         // double separated_proportions[1] = {0.4};
 
-        double steady_state = 1;
-        double end_time = 1;
+        double steady_state = 100;
+        double end_time = 10000;
 
         // Crypt Setup
         double cell_radius = 3.5; //3.5;

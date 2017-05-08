@@ -8,13 +8,13 @@
 #
 
 num_sims=10;
-num_sweeps=5;
+num_sweeps=10;
 
 for (( i=0 ; i<${num_sweeps} ; i++))
 do
 	start_sim=`expr $i \* $num_sims`;
 	echo $start_sim
-	# NB "nice -20" gives the jobs low priority (good if they are going to dominate the server and no slower if nothing else is going on)
+
 	# ">" directs std::cout to the file.
 	# "2>&1" directs std::cerr to the same place.
 	# "&" on the end lets the script carry on and not wait until this has finished.
