@@ -32,6 +32,7 @@
 #include "CellParentIdWriter.hpp"
 #include "CellLabelWriter.hpp"
 #include "SeparatedCellLabelWriter.hpp"
+#include "CellAncestorWriter.hpp"
 
 #include "GeneralisedLinearSpringForce.hpp"
 #include "DifferentialAdhesionSpringForce.hpp"
@@ -247,6 +248,7 @@ public:
                     crypt.AddCellWriter<CellParentIdWriter>();
                     crypt.AddCellWriter<CellLabelWriter>();
                     crypt.AddCellWriter<SeparatedCellLabelWriter>();
+                    crypt.AddCellWriter<CellAncestorWriter>();
                     
                     crypt.AddPopulationWriter<NodeVelocityWriter>();
 
@@ -315,6 +317,8 @@ public:
                     // Now label some cells to divide with increased separation
                     boost::shared_ptr<AbstractCellProperty> p_state(CellPropertyRegistry::Instance()->Get<SeparatedCellLabel>());
                     RandomlyLabelCells(simulator.rGetCellPopulation().rGetCells(), p_state, separated_proportion);
+
+                    simulator.rGetCellPopulation().SetCellAncestorsToLocationIndices();
 
                     // Run simulation
                     simulator.Solve();
