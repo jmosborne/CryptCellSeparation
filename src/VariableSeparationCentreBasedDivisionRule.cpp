@@ -116,14 +116,13 @@ std::pair<c_vector<double, SPACE_DIM>, c_vector<double, SPACE_DIM> > VariableSep
             double random_azimuth_angle = 2*M_PI*u;
             double random_zenith_angle = std::acos(2*v - 1);
 
-            random_vector(0) = 0.5*separation*cos(random_azimuth_angle)*sin(random_zenith_angle);
-            random_vector(1) = 0.5*separation*sin(random_azimuth_angle)*sin(random_zenith_angle);
-            random_vector(2) = 0.5*separation*cos(random_zenith_angle);
-
-             // random_vector(0) = 0.0;
-             // random_vector(1) = 0.0;
-             // random_vector(2) = 1.0*separation;
-             
+            // random_vector(0) = 0.5*separation*cos(random_azimuth_angle)*sin(random_zenith_angle);
+            // random_vector(1) = 0.5*separation*sin(random_azimuth_angle)*sin(random_zenith_angle);
+            // random_vector(2) = 0.5*separation*cos(random_zenith_angle);
+            
+            random_vector(0) = 0.5*separation*cos(random_azimuth_angle);
+            random_vector(1) = 0.5*separation*sin(random_azimuth_angle);
+            random_vector(2) = 0.0;
              
             break;
         }

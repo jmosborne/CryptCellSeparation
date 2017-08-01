@@ -223,7 +223,7 @@ public:
         //Create output directory
         std::stringstream out;
         out << "Ratio_"<< proportion_labeled_cells << "/Separation_" << separation_multiplier;
-        std::string output_directory = "3dCryptCellSeparation" +  out.str();
+        std::string output_directory = "3dCryptCellFlatSeparation" +  out.str();
         simulator.SetOutputDirectory(output_directory);
 
         // Create a force law and pass it to the simulation
