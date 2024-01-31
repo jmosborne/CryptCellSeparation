@@ -1,8 +1,8 @@
 # CryptCellSeparation
 
-## Code for "Post-mitotic positioning directs niche exit in intestinal epithelium"
+## Code for "Interkinetic nuclear migration and basal tethering facilitates post-mitotic daughter separation in intestinal organoids"
 
-This project contains the code necesary for running the simulations presented in Carroll et al. "Post-mitotic positioning directs niche exit in intestinal epithelium".
+This project contains the code necesary for running the simulations presented in Caroll et al "Interkinetic nuclear migration and basal tethering facilitates post-mitotic daughter separation in intestinal organoids" in the Journal of Cell Science [https://doi.org/10.1242%2Fjcs.211656](https://doi.org/10.1242%2Fjcs.211656) 
 
 This model is an extension on a model originally presented in Dunn et al. (2016) doi: 10.1091/mbc.E15-12-0854 and makes use of the cell cycle and geometry model given here https://chaste.cs.ox.ac.uk/trac/wiki/PaperTutorials/CryptProliferationDistribution. 
 
